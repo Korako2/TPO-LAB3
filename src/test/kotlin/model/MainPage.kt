@@ -1,9 +1,11 @@
 package model
 
+import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
+import org.openqa.selenium.support.PageFactory
 
-class MainPage {
+class MainPage(driver: WebDriver) {
     @FindBy(xpath = "//a[text()='[ добавить поле ]'][@class='jslink']")
     lateinit var addFieldLink: WebElement
 
@@ -22,6 +24,12 @@ class MainPage {
     @FindBy(xpath = "//input[@class='upfile']")
     lateinit var fileInput: WebElement
 
+    @FindBy(xpath = "//input[@name='file2']")
+    lateinit var file2Input: WebElement
+
+    @FindBy(xpath = "//input[@name='file3']")
+    lateinit var file3Input: WebElement
+
     @FindBy(xpath = "//input[@name='check_orig_resize']")
     lateinit var resizeCheckbox: WebElement
 
@@ -37,4 +45,19 @@ class MainPage {
     @FindBy(xpath = "//input[@name='submit']")
     lateinit var submitButton: WebElement
 
+    @FindBy(xpath = "(//h3)[2]")
+    lateinit var firstImageName: WebElement
+
+    @FindBy(xpath = "(//h3)[3]")
+    lateinit var secondImageName: WebElement
+
+    @FindBy(xpath = "(//h3)[4]")
+    lateinit var thirdImageName: WebElement
+
+    @FindBy(xpath = "//textarea[@name='files']")
+    lateinit var linksInput: WebElement
+
+    init {
+        PageFactory.initElements(driver, this)
+    }
 }
