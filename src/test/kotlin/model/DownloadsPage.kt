@@ -20,6 +20,9 @@ class DownloadsPage(driver: WebDriver) {
     @FindBy(xpath = "//div[@class='thumb']")
     lateinit var images: MutableList<WebElement>
 
+    @FindBy(xpath = "//input[@type='checkbox']")
+    lateinit var checkboxes: MutableList<WebElement>
+
     init {
         PageFactory.initElements(driver, this)
     }

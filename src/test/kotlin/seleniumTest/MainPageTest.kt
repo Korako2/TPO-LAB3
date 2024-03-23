@@ -116,8 +116,6 @@ class MainPageTest {
         val secondImageLink = "https://uprostim.com/wp-content/uploads/2021/05/image072-4.jpg"
         val thirdImageLink = "https://kartinkof.club/uploads/posts/2022-04/1649633828_3-kartinkof-club-p-ugarnie-kartinki-na-avu-s-kotami-3.jpg"
         mainPage.fromLinkLink.click()
-        mainPage.addFieldLink.click()
-        mainPage.addFieldLink.click()
         val links = arrayOf(firstImageLink, secondImageLink, thirdImageLink)
         mainPage.linksInput.sendKeys(links.joinToString("\n"))
         mainPage.submitButton.click()
