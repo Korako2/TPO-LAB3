@@ -1,6 +1,7 @@
 package seleniumTest
 
 import model.DonatePage
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.openqa.selenium.WebDriver
@@ -17,11 +18,15 @@ class DonatePageTest {
     private val url = "https://fastpic.org/donate"
 
     companion object {
-        private val browser = arrayOf("Chrome")
+        private val browser = arrayOf("Chrome", "Firefox")
         @JvmStatic
         fun browserProvider() : Stream<String> {
             return Stream.of(*browser)
         }
+    }
+    @AfterEach
+    fun tearDown() {
+        driver.quit()
     }
 
     private fun browserSetup(browser: String) {

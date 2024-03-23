@@ -17,7 +17,7 @@ class MenuToolsTest {
     private lateinit var driver : WebDriver
     private val url = "https://fastpic.org/"
     companion object {
-        private val browser = arrayOf("Chrome")
+        private val browser = arrayOf("Chrome", "Firefox")
         @JvmStatic
         fun browserProvider() : Stream<String> {
             return Stream.of(*browser)

@@ -4,6 +4,7 @@ import model.DownloadsPage
 import model.ImagePage
 import model.MainPage
 import model.MenuTools
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.openqa.selenium.By
@@ -21,7 +22,7 @@ class DownloadsPageTest {
     private lateinit var mainPage: MainPage
     private val url = "https://fastpic.org"
     companion object {
-        private val browser = arrayOf("Chrome")
+        private val browser = arrayOf("Chrome", "Firefox")
         @JvmStatic
         fun browserProvider() : Stream<String> {
             return Stream.of(*browser)
@@ -41,6 +42,11 @@ class DownloadsPageTest {
         downloadsPage = DownloadsPage(driver)
         menuTools = MenuTools(driver)
         mainPage = MainPage(driver)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        driver.quit()
     }
 
     @ParameterizedTest

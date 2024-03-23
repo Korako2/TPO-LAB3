@@ -4,6 +4,7 @@ import model.DownloadsPage
 import model.ImagePage
 import model.MainPage
 import model.MenuTools
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
@@ -26,17 +27,17 @@ class MainPageTest {
     private lateinit var driver : WebDriver
     private val url = "https://fastpic.org/"
     companion object {
-        private val browser = arrayOf("Chrome")
+        private val browser = arrayOf("Chrome", "Firefox")
         @JvmStatic
         fun browserProvider() : Stream<String> {
             return Stream.of(*browser)
         }
     }
 
-//    @AfterEach
-//    fun tearDown() {
-//        driver.quit()
-//    }
+    @AfterEach
+    fun tearDown() {
+        driver.quit()
+    }
 
     private fun browserSetup(browser: String) {
         if (browser == "Chrome") {
@@ -151,8 +152,8 @@ class MainPageTest {
 
         val tabs = ArrayList(driver.windowHandles)
         driver.switchTo().window(tabs[1])
-
         val resolution = driver.findElement(By.xpath("(//div[@class='resolution text-white-50 m-2'])[1]"))
+        Thread.sleep(1000)
         val width = resolution.text.split(" ")[1].split("x")[0]
         val height = resolution.text.split(" ")[1].split("x")[1]
         assert(width.toInt() == 500 || height.toInt() == 500)
@@ -183,6 +184,7 @@ class MainPageTest {
         mainPage.rotateCheckbox.click()
         mainPage.rotateSelect.findElement(By.xpath("//option[text()='90° против часовой']")).click()
         mainPage.submitButton.click()
+        Thread.sleep(15000)
         assert(mainPage.firstImageName.text == "cat.jpg")
 
         menuTools.myLoadingLink.click()
@@ -190,7 +192,7 @@ class MainPageTest {
 
         val tabs = ArrayList(driver.windowHandles)
         driver.switchTo().window(tabs[1])
-
+        Thread.sleep(2000)
         val resolution = driver.findElement(By.xpath("(//div[@class='resolution text-white-50 m-2'])[1]"))
         val width = resolution.text.split(" ")[1].split("x")[0]
         val height = resolution.text.split(" ")[1].split("x")[1]
@@ -219,6 +221,7 @@ class MainPageTest {
         driver.switchTo().window(tabs[1])
 
         val resolution = driver.findElement(By.xpath("(//div[@class='resolution text-white-50 m-2'])[1]"))
+        Thread.sleep(1000)
         val width = resolution.text.split(" ")[1].split("x")[0]
         val height = resolution.text.split(" ")[1].split("x")[1]
         assert(width.toInt() == 500 || height.toInt() == 500)
@@ -244,6 +247,7 @@ class MainPageTest {
         driver.switchTo().window(tabs[1])
 
         val resolution = driver.findElement(By.xpath("(//div[@class='resolution text-white-50 m-2'])[1]"))
+        Thread.sleep(1000)
         val width = resolution.text.split(" ")[1].split("x")[0]
         val height = resolution.text.split(" ")[1].split("x")[1]
         assert(width.toInt() == 1000 && height.toInt() == 2000)
