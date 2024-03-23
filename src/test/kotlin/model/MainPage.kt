@@ -22,6 +22,9 @@ class MainPage(driver: WebDriver) {
     @FindBy(xpath = "//a[@class='jslink']//b[text()='[ посмотреть ограничения ]']")
     lateinit var restrictionsLink: WebElement
 
+    @FindBy(xpath = "(//div[@class='center rounded-corners']//p)[3]")
+    lateinit var restrictionsText: WebElement
+
     @FindBy(xpath = "//a[text() = '[ отключить все эффекты ]'][@class='jslink']")
     lateinit var disableAllEffectsLink: WebElement
 
@@ -45,6 +48,12 @@ class MainPage(driver: WebDriver) {
 
     @FindBy(xpath = "//select[@name='orig_rotate']")
     lateinit var rotateSelect: WebElement
+
+    @FindBy(xpath = "//input[@name='check_optimization']")
+    lateinit var optimizationCheckbox: WebElement
+
+    @FindBy(xpath = "//input[@name='check_poster']")
+    lateinit var posterCheckbox: WebElement
 
     @FindBy(xpath = "//input[@name='submit']")
     lateinit var submitButton: WebElement

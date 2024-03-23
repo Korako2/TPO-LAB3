@@ -273,4 +273,28 @@ class MainPageTest {
         assert(driver.currentUrl == "https://fastpic.org/donate")
     }
 
+    @ParameterizedTest
+    @MethodSource("browserProvider")
+    fun `restrictions link should be show restriction`(browser: String) {
+        browserSetup(browser)
+        mainPage.restrictionsLink.click()
+        assert(mainPage.restrictionsText.isDisplayed)
+    }
+
+    @ParameterizedTest
+    @MethodSource("browserProvider")
+    fun `disable all effects link should disable all selects`(browser: String) {
+        browserSetup(browser)
+
+        mainPage.resizeCheckbox.click()
+        mainPage.rotateCheckbox.click()
+        mainPage.optimizationCheckbox.click()
+        mainPage.posterCheckbox.click()
+        mainPage.disableAllEffectsLink.click()
+
+        assert(!mainPage.resizeCheckbox.isSelected)
+        assert(!mainPage.rotateSelect.isSelected)
+        assert(!mainPage.optimizationCheckbox.isSelected)
+        assert(!mainPage.posterCheckbox.isSelected)
+    }
 }
