@@ -98,6 +98,17 @@ class DownloadsPageTest {
     }
 
 
+    @ParameterizedTest
+    @MethodSource("browserProvider")
+    fun `delete two images from downloads page`(browser: String) {
+        browserSetup(browser)
+        uploadTestImages()
+        menuTools.myLoadingLink.click()
+        downloadsPage.checkboxes[0].click()
+        downloadsPage.checkboxes[2].click()
+        downloadsPage.deleteSelectedLink.click()
+        assert(downloadsPage.images.size == 1)
+    }
     private fun countSelectedImages(selectedImages: MutableList<WebElement>) : Int {
         var countSelectedImages = 0
         for (checkbox in selectedImages) {

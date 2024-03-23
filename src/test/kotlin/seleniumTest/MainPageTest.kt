@@ -65,6 +65,7 @@ class MainPageTest {
         mainPage.fileInput.sendKeys(file.absolutePath)
         mainPage.submitButton.click()
         assert(mainPage.firstImageName.text == "cat.jpg")
+        assert(driver.findElement(By.xpath("//img[@border=0]")) != null)
         menuTools.myLoadingLink.click()
         assert(downloadsPage.images.size == 1)
     }
@@ -89,6 +90,8 @@ class MainPageTest {
         assert(mainPage.secondImageName.text == "cat2.jpg")
         assert(mainPage.thirdImageName.text == "cat3.jpg")
 
+        val img = driver.findElements(By.xpath("//img[@border=0]"))
+        assert(img.size == 3)
         menuTools.myLoadingLink.click()
         assert(downloadsPage.images.size == 3)
     }
@@ -103,6 +106,8 @@ class MainPageTest {
         mainPage.linksInput.sendKeys(link)
         mainPage.submitButton.click()
         assert(mainPage.firstImageName.text == "https://hkstrategies.ca/wp-content/uploads/2017/04/taming-the-troll-stay-cool-feature.jpg")
+
+        assert(driver.findElement(By.xpath("//img[@border=0]")) != null)
 
         menuTools.myLoadingLink.click()
         assert(downloadsPage.images.size == 1)
@@ -125,6 +130,10 @@ class MainPageTest {
         assert(mainPage.firstImageName.text == imageName)
         assert(mainPage.secondImageName.text == imageName)
         assert(mainPage.thirdImageName.text == imageName)
+        assert(driver.findElement(By.xpath("//img[@border=0]")) != null)
+
+        val img = driver.findElements(By.xpath("//img[@border=0]"))
+        assert(img.size == 3)
 
         menuTools.myLoadingLink.click()
         assert(downloadsPage.images.size == 3)
@@ -146,6 +155,7 @@ class MainPageTest {
         mainPage.resizeSelect.findElement(By.xpath("//option[text()='500 (стандарт)']")).click()
         mainPage.submitButton.click()
         assert(mainPage.firstImageName.text == "cat.jpg")
+        assert(driver.findElement(By.xpath("//img[@border=0]")) != null)
 
         menuTools.myLoadingLink.click()
         downloadsPage.images[0].click()
@@ -186,6 +196,7 @@ class MainPageTest {
         mainPage.submitButton.click()
         Thread.sleep(15000)
         assert(mainPage.firstImageName.text == "cat.jpg")
+        assert(driver.findElement(By.xpath("//img[@border=0]")) != null)
 
         menuTools.myLoadingLink.click()
         downloadsPage.images[0].click()
@@ -213,6 +224,7 @@ class MainPageTest {
         mainPage.resizeSelect.findElement(By.xpath("//option[text()='500 (стандарт)']")).click()
         mainPage.submitButton.click()
         assert(mainPage.firstImageName.text == "https://hkstrategies.ca/wp-content/uploads/2017/04/taming-the-troll-stay-cool-feature.jpg")
+        assert(driver.findElement(By.xpath("//img[@border=0]")) != null)
 
         menuTools.myLoadingLink.click()
         downloadsPage.images[0].click()
@@ -239,6 +251,7 @@ class MainPageTest {
         mainPage.rotateSelect.findElement(By.xpath("//option[text()='90° против часовой']")).click()
         mainPage.submitButton.click()
         assert(mainPage.firstImageName.text == "https://hkstrategies.ca/wp-content/uploads/2017/04/taming-the-troll-stay-cool-feature.jpg")
+        assert(driver.findElement(By.xpath("//img[@border=0]")) != null)
 
         menuTools.myLoadingLink.click()
         downloadsPage.images[0].click()
@@ -299,4 +312,19 @@ class MainPageTest {
         assert(!mainPage.optimizationCheckbox.isSelected)
         assert(!mainPage.posterCheckbox.isSelected)
     }
+
+    @ParameterizedTest
+    @MethodSource("browserProvider")
+    fun `adding an image from an incorrect link`(browser: String) {
+        browserSetup(browser)
+
+        mainPage.fromLinkLink.click()
+        val link = "https://hkstrategies.ca/wp-content/uploads/2017/04/taming-the-troll-stay-cool-feature"
+        mainPage.linksInput.sendKeys(link)
+        mainPage.submitButton.click()
+        val error = driver.findElement(By.xpath("//div[contains(text(), 'В запросе')]"))
+        assert(error.isDisplayed)
+    }
+
+
 }
