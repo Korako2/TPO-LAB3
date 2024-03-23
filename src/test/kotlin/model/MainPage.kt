@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.PageFactory
 
+// page_url = https://fastpic.org/
 class MainPage(driver: WebDriver) {
     @FindBy(xpath = "//a[text()='[ добавить поле ]'][@class='jslink']")
     lateinit var addFieldLink: WebElement

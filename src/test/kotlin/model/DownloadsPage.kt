@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.PageFactory
 
+// page_url = https://fastpic.org/my.php
 class DownloadsPage(driver: WebDriver) {
 
     @FindBy(xpath = "//a[@class='jslink'][text()='[ выбрать всё ]']")
