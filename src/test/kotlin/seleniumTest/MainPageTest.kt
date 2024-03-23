@@ -4,18 +4,19 @@ import model.DownloadsPage
 import model.ImagePage
 import model.MainPage
 import model.MenuTools
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.firefox.FirefoxDriver
-import org.openqa.selenium.support.FindBy
+import java.awt.image.BufferedImage
 import java.io.File
 import java.time.Duration
 import java.util.stream.Stream
+import javax.imageio.ImageIO
 
 class MainPageTest {
     private lateinit var mainPage: MainPage
@@ -137,6 +138,10 @@ class MainPageTest {
         mainPage.fromComputerLink.click()
         val image = "images/cat.jpg"
         val file = File(image)
+        if (!file.exists()) {
+            println("File not found")
+            return
+        }
         mainPage.fileInput.sendKeys(file.absolutePath)
         mainPage.resizeCheckbox.click()
         mainPage.resizeSelect.findElement(By.xpath("//option[text()='500 (стандарт)']")).click()
@@ -145,8 +150,127 @@ class MainPageTest {
 
         menuTools.myLoadingLink.click()
         downloadsPage.images[0].click()
-        println(imagePage.resolution[0].text) //todo
+
+        val tabs = ArrayList(driver.windowHandles)
+        driver.switchTo().window(tabs[1])
+
+        val resolution = driver.findElement(By.xpath("(//div[@class='resolution text-white-50 m-2'])[1]"))
+        val width = resolution.text.split(" ")[1].split("x")[0]
+        val height = resolution.text.split(" ")[1].split("x")[1]
+        assert(width.toInt() == 500 || height.toInt() == 500)
     }
 
+    @ParameterizedTest
+    @MethodSource("browserProvider")
+    fun `add image from a computer with rotate`(browser: String) {
+        browserSetup(browser)
+        mainPage.fromComputerLink.click()
+        val image = "images/cat.jpg"
+        val file = File(image)
+        if (!file.exists()) {
+            println("File not found")
+            return
+        }
+        var initialWidth = 0
+        var initialHeight = 0
+        try {
+            val img = ImageIO.read(file)
+            initialWidth = img.width
+            initialHeight = img.height
+        } catch (e: Exception) {
+            println("Error while reading file")
+        }
+
+        mainPage.fileInput.sendKeys(file.absolutePath)
+        mainPage.rotateCheckbox.click()
+        mainPage.rotateSelect.findElement(By.xpath("//option[text()='90° против часовой']")).click()
+        mainPage.submitButton.click()
+        assert(mainPage.firstImageName.text == "cat.jpg")
+
+        menuTools.myLoadingLink.click()
+        downloadsPage.images[0].click()
+
+        val tabs = ArrayList(driver.windowHandles)
+        driver.switchTo().window(tabs[1])
+
+        val resolution = driver.findElement(By.xpath("(//div[@class='resolution text-white-50 m-2'])[1]"))
+        val width = resolution.text.split(" ")[1].split("x")[0]
+        val height = resolution.text.split(" ")[1].split("x")[1]
+        assert(width.toInt() == initialHeight && height.toInt() == initialWidth)
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("browserProvider")
+    fun `add image from a link with resize`(browser: String) {
+        browserSetup(browser)
+        mainPage.fromLinkLink.click()
+
+        val link = "https://hkstrategies.ca/wp-content/uploads/2017/04/taming-the-troll-stay-cool-feature.jpg"
+        mainPage.linksInput.sendKeys(link)
+
+        mainPage.resizeCheckbox.click()
+        mainPage.resizeSelect.findElement(By.xpath("//option[text()='500 (стандарт)']")).click()
+        mainPage.submitButton.click()
+        assert(mainPage.firstImageName.text == "https://hkstrategies.ca/wp-content/uploads/2017/04/taming-the-troll-stay-cool-feature.jpg")
+
+        menuTools.myLoadingLink.click()
+        downloadsPage.images[0].click()
+
+        val tabs = ArrayList(driver.windowHandles)
+        driver.switchTo().window(tabs[1])
+
+        val resolution = driver.findElement(By.xpath("(//div[@class='resolution text-white-50 m-2'])[1]"))
+        val width = resolution.text.split(" ")[1].split("x")[0]
+        val height = resolution.text.split(" ")[1].split("x")[1]
+        assert(width.toInt() == 500 || height.toInt() == 500)
+    }
+
+    @ParameterizedTest
+    @MethodSource("browserProvider")
+    fun `add image from a link with rotate`(browser: String) {
+        browserSetup(browser)
+        mainPage.fromLinkLink.click()
+        val link = "https://hkstrategies.ca/wp-content/uploads/2017/04/taming-the-troll-stay-cool-feature.jpg"
+        mainPage.linksInput.sendKeys(link)
+
+        mainPage.rotateCheckbox.click()
+        mainPage.rotateSelect.findElement(By.xpath("//option[text()='90° против часовой']")).click()
+        mainPage.submitButton.click()
+        assert(mainPage.firstImageName.text == "https://hkstrategies.ca/wp-content/uploads/2017/04/taming-the-troll-stay-cool-feature.jpg")
+
+        menuTools.myLoadingLink.click()
+        downloadsPage.images[0].click()
+
+        val tabs = ArrayList(driver.windowHandles)
+        driver.switchTo().window(tabs[1])
+
+        val resolution = driver.findElement(By.xpath("(//div[@class='resolution text-white-50 m-2'])[1]"))
+        val width = resolution.text.split(" ")[1].split("x")[0]
+        val height = resolution.text.split(" ")[1].split("x")[1]
+        assert(width.toInt() == 1000 && height.toInt() == 2000)
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("browserProvider")
+    fun `adding ten fields should throw alert`(browser: String) {
+        browserSetup(browser)
+        mainPage.fromComputerLink.click()
+        for (i in 1..10) {
+            mainPage.addFieldLink.click()
+        }
+        val alert = driver.switchTo().alert()
+        assert(alert.text == "Лимит на количество одновременных загрузок исчерпан")
+        alert.accept()
+    }
+
+    @ParameterizedTest
+    @MethodSource("browserProvider")
+    fun `help service link should be open correct page`(browser: String) {
+        browserSetup(browser)
+        mainPage.helpServiceLink.click()
+        assert(driver.currentUrl == "https://fastpic.org/donate")
+    }
 
 }

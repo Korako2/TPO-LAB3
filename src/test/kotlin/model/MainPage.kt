@@ -7,6 +7,9 @@ import org.openqa.selenium.support.PageFactory
 
 // page_url = https://fastpic.org/
 class MainPage(driver: WebDriver) {
+    @FindBy(xpath = "(//a[@href = '/donate'])[2]")
+    lateinit var helpServiceLink: WebElement
+
     @FindBy(xpath = "//a[text()='[ добавить поле ]'][@class='jslink']")
     lateinit var addFieldLink: WebElement
 
